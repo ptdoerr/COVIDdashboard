@@ -5,6 +5,7 @@ import ipywidgets as widgets
 from IPython.display import display
 import os
 import time
+import us_state_codes as stcd
 
 # print entire DataFrame or Series
 def print_full(x):
@@ -110,6 +111,20 @@ def extract_plot_counties(normalized_df, counties_list, plot_days):
     test_df.set_index('Combined_Key', inplace=True)
     test_df1 = test_df.iloc[:, num_days_index:]
     out_df = test_df1.transpose()
+    
+    new_columns = []
+    columns = out_df.columns
+    
+    for col in columns:
+        terms = col.split(', ')
+        st_code = stcd.us_state_to_abbrev[terms[1]]
+        new_name = terms[0] +', ' +st_code
+        print(new_name)
+        new_columns.append(new_name)
+        
+    out_df.columns = new_columns #rename(columns=new_columns, inplace=True)
+        
+
     print('out_df:', out_df.shape)
     return(out_df)
 
@@ -136,12 +151,7 @@ def set_graph_background_color_bands(graph_axes, max_value, color_list):
         graph_axes.axhspan(75, float(max_value)+5, facecolor=color_list[4], alpha=0.3)
     else:
         graph_axes.axhspan(25, float(max_value)+5, facecolor=color_list[3], alpha=0.3)
-
-        
-        
-        
-        
-        
+     
         
 # currently not used
 def calculate_full_rolling_averages_with_fips_index():
