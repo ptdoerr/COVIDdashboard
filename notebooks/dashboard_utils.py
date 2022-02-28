@@ -5,6 +5,7 @@ import ipywidgets as widgets
 from IPython.display import display
 import os
 import time
+import logging as log
 import us_state_codes as stcd
 
 # print entire DataFrame or Series
@@ -45,50 +46,50 @@ def merge_and_calculate_full_new_cases(county_case_df, county_pop_df):
     #print_full(county_pop_df) #["FIPS Code"])
     #print("county_pop_df[FIPS Code]:" +str(county_pop_df["FIPS Code"].astype(int)))
     #print("csse_county_df[FIPS]:" +str(csse_county_df["FIPS"].astype(int)))
-    print("fixing pop FIPS Code format...")
+    log.info("fixing pop FIPS Code format...")
     county_pop_df["FIPS Code"] = pd.to_numeric(county_pop_df["FIPS Code"], downcast='integer', errors='coerce')
-    #print(county_pop_df.head)
-    print("fixing case FIPS format...")
+    log.debug(county_pop_df.head)
+    log.info("fixing case FIPS format...")
     county_case_df["FIPS"] = pd.to_numeric(county_case_df["FIPS"], downcast='integer', errors='coerce')
-    #print(csse_county_df.head)
+    log.debug(county_case_df.head)
     
     print("Merging Case and Population data...")
     csse_w_pop_df = county_pop_df.merge(county_case_df, left_on='FIPS Code', right_on='FIPS').set_index('FIPS')
-    print(csse_w_pop_df.columns)
+    log.debug(csse_w_pop_df.columns)
     print(csse_w_pop_df.shape)
-    #print(csse_w_pop_df.head)
+    log.debug(csse_w_pop_df.head)
     #print_full(csse_w_pop_df)
-    #col_list = list(csse_w_pop_df)
-    #print(col_list)
+   
+    log.debug(list(csse_w_pop_df))
     
     row_list = list()
     
     print("Calculating normalized ave new cases...")
     for idx, row in csse_w_pop_df.iterrows():
-        #print(idx, row['Population'], row['Combined_Key'])
-        #print(row)
+        log.debug(idx, row['Population'], row['Combined_Key'])
+        log.debug(row)
         county_pop = row['Population']
         county_new_cases_series = row.iloc[16:].diff().rolling(7).mean().apply(pop_normalize, args=(county_pop,))
-        #print(type(county_new_cases_series))
-        #print(county_new_cases_series)
+        log.debug(type(county_new_cases_series))
+        log.debug(county_new_cases_series)
         #insert county name
         county = row['Combined_Key']
         county_new_cases_series_w_name = pd.Series({'Combined_Key':row['Combined_Key']})
         element_list = [county_new_cases_series_w_name, county_new_cases_series]
         county_new_cases_series_w_name = pd.concat(element_list, axis=0)
-        #print('county_new_cases_series_w_name', type(county_new_cases_series_w_name),county_new_cases_series_w_name.shape)
+        log.debug('county_new_cases_series_w_name', type(county_new_cases_series_w_name),county_new_cases_series_w_name.shape)
         #pd.concat(pd.Series([county_name]), county_new_cases_series)
         #set series name as fips id
         county_new_cases_series_w_name.name = row['FIPS Code']
-        #print(county_new_cases_series)
+        log.debug(county_new_cases_series)
         row_list.append(county_new_cases_series_w_name)#county_new_cases_series)
         #csse_full_counties_norm_cases_df.append(county_new_cases_series)
     
     transposed_df = pd.concat(row_list, axis=1)
-    #print(transposed_df.head)
+    log.debug(transposed_df.head)
     norm_cases_df = transposed_df.transpose()
     print(norm_cases_df.shape)
-    #print(csse_full_counties_norm_cases_df.head)
+    log.debug(norm_cases_df.head)
     end = time.time()
     print("merge_and_calculate_full_new_cases() completed:", end-start)
     
@@ -112,6 +113,7 @@ def extract_plot_counties(normalized_df, counties_list, plot_days):
     test_df1 = test_df.iloc[:, num_days_index:]
     out_df = test_df1.transpose()
     
+    # reformat column names with state codes to save space
     new_columns = []
     columns = out_df.columns
     
@@ -129,7 +131,7 @@ def extract_plot_counties(normalized_df, counties_list, plot_days):
     return(out_df)
 
 
-    #print(csse_counties_norm_cases_df)
+    log.debug(csse_counties_norm_cases_df)
     #current_values = csse_counties_norm_cases_df.iloc[-1, :]
     #print('current Values: ', type(current_values), current_values) 
     
@@ -140,18 +142,22 @@ def set_graph_background_color_bands(graph_axes, max_value, color_list):
     print("in set_graph_background_color_bands() max_value = " +str(max_value))
     graph_axes.axhspan(0, 2, facecolor=color_list[0], alpha=0.3)
     graph_axes.axhspan(2, 10, facecolor=color_list[1], alpha=0.3)
-    graph_axes.axhspan(10, 25, facecolor=color_list[2], alpha=0.3)
+   
 
     if(max_value > 150):
+        graph_axes.axhspan(10, 25, facecolor=color_list[2], alpha=0.3)
         graph_axes.axhspan(25, 75, facecolor=color_list[3], alpha=0.3)
         graph_axes.axhspan(75, 150, facecolor=color_list[4], alpha=0.3)
         graph_axes.axhspan(150, float(max_value)+5, facecolor=color_list[5], alpha=0.3)
     elif(max_value > 75):
+        graph_axes.axhspan(10, 25, facecolor=color_list[2], alpha=0.3)
         graph_axes.axhspan(25, 75, facecolor=color_list[3], alpha=0.3)
         graph_axes.axhspan(75, float(max_value)+5, facecolor=color_list[4], alpha=0.3)
+    elif(max_value > 25):
+        graph_axes.axhspan(10, 25, facecolor=color_list[2], alpha=0.3)
+        graph_axes.axhspan(25, float(max_value)+3, facecolor=color_list[3], alpha=0.3)
     else:
-        graph_axes.axhspan(25, float(max_value)+5, facecolor=color_list[3], alpha=0.3)
-     
+        graph_axes.axhspan(10, float(max_value)+1, facecolor=color_list[2], alpha=0.3)
         
 # currently not used
 def calculate_full_rolling_averages_with_fips_index():
