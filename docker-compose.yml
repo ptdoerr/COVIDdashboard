@@ -1,0 +1,9 @@
+
+covdash:
+  image: pdoerr/coviddashboard:latest
+  container_name: covdash
+  ports:
+    - 8888:8888
+  environment:
+    JUPYTER_ENABLE_LAB: "yes"
+    JUPYTER_TOKEN: "europa"
