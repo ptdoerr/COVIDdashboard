@@ -24,6 +24,8 @@ WORKDIR /project
 # conda env export --no-builds > test_geo.yml
 
 # Create Conda environment from the YAML file
+# conda env export > test_geo.yml --no-builds 
+# then edit .yml to remove windows libs
 COPY config/test_geo.yml .
 RUN conda env create -f test_geo.yml
 

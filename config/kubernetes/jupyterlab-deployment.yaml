@@ -1,34 +1,34 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: jupyterlab
-  namespace: jlab
+  name: CovidDashboard
+  namespace: cdash
   labels:
-    name: jupyterlab
+    name: CovidDashboard
 spec:
   replicas: 1
   selector:
     matchLabels:
-      name: jupyterlab
+      name: CovidDashboard
   template:
     metadata:
       labels:
-        name: jupyterlab
+        name: CovidDashboard
     spec:
       securityContext:
         runAsUser: 0
         fsGroup: 0
       containers:
-        - name: jupyterlab
-          image: jupyter/datascience-notebook:latest
+        - name: CovidDashboard
+          image: covid-dashboard:latest
           imagePullPolicy: IfNotPresent
           ports:
           - containerPort: 8888
-          command:
-            - /bin/bash
-            - -c
-            - |
-              start.sh jupyter lab --LabApp.token='password' --LabApp.ip='0.0.0.0' --LabApp.allow_root=True
+          #command:
+            #- /bin/bash
+            #- -c
+            #- |
+              #start.sh jupyter lab --LabApp.token='password' --LabApp.ip='0.0.0.0' --LabApp.allow_root=True
           volumeMounts:
             - name: jupyterlab-data
               mountPath: /home/jovyan
