@@ -25,7 +25,6 @@ build-job:       # This job runs in the build stage, which runs first.
   stage: build
   script:
     - echo "Compiling the code..."
-    - echo "This is the right build file"
     - echo "Compile complete."
 
 unit-test-job:   # This job runs in the test stage.
