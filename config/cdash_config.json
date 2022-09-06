@@ -7,5 +7,9 @@
         "s3_bucket": "covid-dash-ptd",
         "aws_access_key_id": "AKIARPO7NXDF7JPRROW2",
         "aws_secret_access_key": "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"
+    },
+    "mongodb": {
+        "user": "cdash",
+        "password": "1Wi4S8vC1EtV59cq"
     }
 }
