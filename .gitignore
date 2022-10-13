@@ -1,0 +1,9 @@
+# ignore data directory
+data/
+
+# ignore input directory
+input/
+
+# ignore notebook checkpoints and cache
+notebooks/__pycache__
+.ipynb_checkpoints
