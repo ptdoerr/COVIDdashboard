@@ -6,10 +6,10 @@ from IPython.display import display
 import os
 import time
 import logging as log
-import us_state_codes as stcd
+import covid_dashboard_utils.us_state_codes as stcd
 
 # print entire DataFrame or Series
-def print_full(x):
+def print_full(x: any):
     pd.set_option('display.max_rows', None)
     pd.set_option('display.max_columns', None)
     pd.set_option('display.width', 2000)
@@ -27,18 +27,18 @@ def test_function1():
     print('in test_function')
     
 # normalize value to local cases per 100k
-def pop_normalize(value, pop):
+def pop_normalize(value: float, pop: int):
     return value * 100000/pop
     
 # normalize value to local cases per 100k
-def pop_normalize_internal(row):
+def pop_normalize_internal(row: float):
     #pop = 
     return value * 100000/pop
 
 #@graphs_out.capture()
 #Normalize county to population and calculate 7 day average / 100k
 #Returns normalized Dataframe
-def merge_and_calculate_full_new_cases(county_case_df, county_pop_df):
+def merge_and_calculate_full_new_cases(county_case_df: pd.DataFrame, county_pop_df: pd.DataFrame):
     start = time.time()
     global csse_full_counties_norm_cases_df
     
@@ -97,7 +97,7 @@ def merge_and_calculate_full_new_cases(county_case_df, county_pop_df):
 
 #extract rows to plot from full normalized data based on selected counties    
 #@graphs_out.capture()    
-def extract_plot_counties(normalized_df, counties_list, plot_days):
+def extract_plot_counties(normalized_df: pd.DataFrame, counties_list: list, plot_days: int):
     print('in extract_plot_counties')
     #global csse_plot_days
     #global csse_full_counties_norm_cases_df
@@ -138,7 +138,7 @@ def extract_plot_counties(normalized_df, counties_list, plot_days):
     
 
 # set graph background colors based on cases range
-def set_graph_background_color_bands(graph_axes, max_value, color_list):
+def set_graph_background_color_bands(graph_axes: plt.Axes, max_value: float, color_list: list):
     print("in set_graph_background_color_bands() max_value = " +str(max_value))
     graph_axes.axhspan(0, 2, facecolor=color_list[0], alpha=0.3)
     graph_axes.axhspan(2, 10, facecolor=color_list[1], alpha=0.3)

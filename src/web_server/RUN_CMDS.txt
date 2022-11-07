@@ -1,0 +1,4 @@
+$ Poweshell commands to run flask server
+$env:FLASK_APP='dash_server.py'
+$env:FLASK_ENV='development'
+flask run

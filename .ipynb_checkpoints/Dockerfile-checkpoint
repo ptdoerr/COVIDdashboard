@@ -37,7 +37,7 @@ SHELL ["conda", "run", "-n", "env", "/bin/bash", "-c"]
 COPY ./config/jupyter_lab_config.py ./project/config
 COPY ./notebooks /project/notebooks
 
-EXPOSE 8888
+EXPOSE 8889
 
 CMD ["conda", "run", "-n", "test_geo", "jupyter-lab","--ip=0.0.0.0","--no-browser","--allow-root" "--config=./project/config/jupyter_lab_config.py", "notebooks/CSSE COVID Dashboard.ipynb"]
 
