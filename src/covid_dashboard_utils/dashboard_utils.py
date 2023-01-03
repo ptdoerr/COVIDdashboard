@@ -38,7 +38,7 @@ def pop_normalize_internal(row: float):
 #@graphs_out.capture()
 #Normalize county to population and calculate 7 day average / 100k
 #Returns normalized Dataframe
-def merge_and_calculate_full_new_cases(county_case_df: pd.DataFrame, county_pop_df: pd.DataFrame):
+def merge_and_calculate_full_new_cases(county_case_df: pd.DataFrame, county_pop_df: pd.DataFrame) -> pd.DataFrame:
     start = time.time()
     global csse_full_counties_norm_cases_df
     
@@ -91,7 +91,7 @@ def merge_and_calculate_full_new_cases(county_case_df: pd.DataFrame, county_pop_
     print(norm_cases_df.shape)
     log.debug(norm_cases_df.head)
     end = time.time()
-    print("merge_and_calculate_full_new_cases() completed:", end-start)
+    print("merge_and_calculate_full_new_cases() completed:", end-start, " at: ", time.ctime(end))
     
     return norm_cases_df
 
