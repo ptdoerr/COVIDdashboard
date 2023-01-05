@@ -7,3 +7,7 @@ input/
 # ignore notebook checkpoints and cache
 notebooks/__pycache__
 .ipynb_checkpoints
+
+# ignore sensitive config info
+config/no-git
+config/
