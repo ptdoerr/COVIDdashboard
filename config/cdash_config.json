@@ -5,8 +5,8 @@
     "aws": {
         "aws_region": "us-east-1",
         "s3_bucket": "covid-dash-ptd",
-        "aws_access_key_id": "",
-        "aws_secret_access_key": ""
+        "aws_access_key_id": "test",
+        "aws_secret_access_key": "test"
     },
     "mongodb": {
         "user": "",
