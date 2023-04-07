@@ -4,42 +4,47 @@
 import pandas as pd
 import numpy as np
 import logging as log
-import dashboard_utils as utils
+from . import dashboard_utils as utils
 
-csse_us_county_cases_URL = 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv';
+class CountyDataProcessor:
 
-county_pop_url = 'https://raw.githubusercontent.com/balsama/us_counties_data/main/data/counties.csv'
+    csse_us_county_cases_URL = 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv';
 
-csse_current_county_values = dict()
-csse_counties_norm_cases_df = pd.DataFrame()
-csse_full_counties_norm_cases_df = pd.DataFrame()
-csse_series_list = list() # global list of extracted county time series
+    county_pop_url = 'https://raw.githubusercontent.com/balsama/us_counties_data/main/data/counties.csv'
 
-def __init__(self):
+    def __init__(self) -> None:
+        self.csse_current_county_values = dict()
+        self.csse_counties_norm_cases_df = pd.DataFrame()
+        self.csse_full_counties_norm_cases_df = pd.DataFrame()
+        self.csse_series_list = list() # global list of extracted county time series
 
-    log.info("Loading CSSE County CSV data...")
+        log.info("Loading CSSE County CSV data...")
 
-    try:
-        csse_county_df = pd.read_csv(csse_us_county_cases_URL, parse_dates=True)
-    except:
-        log.error("ERROR: Can't load CSSE data")
+        try:
+            self.csse_county_df = pd.read_csv(CountyDataProcessor.csse_us_county_cases_URL, parse_dates=True)
+        except:
+            log.error("ERROR: Can't load CSSE data")
     
-    print(csse_county_df.shape)
-    log.debug(csse_county_df.dtypes)
-    log.debug(csse_county_df.head)
+        log.info(self.csse_county_df.shape)
+        log.debug(self.csse_county_df.dtypes)
+        log.debug(self.csse_county_df.head)
 
-    log.info("this is log.info")
-    log.info("Loading US population data...")
-    try:
-        county_pop_df = pd.read_csv(county_pop_url, parse_dates=True) #, usecols=['FIPS Code', 'Population'])
-    except:
-        print("ERROR: Can't load Population data")
+        log.info("this is log.info")
+        log.info("Loading US population data...")
 
-    log.debug(county_pop_df.shape)
-    log.debug(county_pop_df.dtypes)
-    log.debug(county_pop_df.head)
+        try:
+            self.county_pop_df = pd.read_csv(
+                CountyDataProcessor.county_pop_url, parse_dates=True) #, usecols=['FIPS Code', 'Population'])
+        except:
+            log.error("ERROR: Can't load Population data")
 
-    csse_full_counties_norm_cases_df = utils.merge_and_calculate_full_new_cases(csse_county_df, county_pop_df)
+        log.debug(self.county_pop_df.shape)
+        log.debug(self.county_pop_df.dtypes)
+        log.debug(self.county_pop_df.head)
 
-def get_county_list() -> list:
-    return csse_full_counties_norm_cases_df['Combined_Key'].unique().tolist()
+        self.csse_full_counties_norm_cases_df = utils.merge_and_calculate_full_new_cases(
+            self.csse_county_df, self.county_pop_df)
+
+    def get_county_list() -> list:
+        county_list = self.csse_full_counties_norm_cases_df['Combined_Key'].unique().tolist()
+        return county_list
