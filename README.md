@@ -15,11 +15,11 @@ Display current case counts for selected counties. Any set of CONUS counties can
 
 Display graph of case counts for selected counties. Any set of CONUS counties can be displayed. Date range is also selectable.
 
-<img src="/data/current-graph/current-graph.jpg" width="300">
+<img src="/data/current-images/current-graph.jpg" width="300">
 
 ### Current Map
 
-<img src="/data/current-map/current-map.jpg" width="300">
+<img src="/data/current-images/current-map.jpg" width="300">
 
 ### GIF Builder
 
@@ -43,6 +43,7 @@ Interactive notebook
 ## Environment Variables
 - AWS
 AWS_ACCESS_KEY_ID
+
 AWS_SECRET_ACCESS_KEY
 - MongoDb
 
@@ -51,10 +52,14 @@ AWS_SECRET_ACCESS_KEY
 
 ### Notebook
 `conda env create -f config/test_geo.yml`
+
 `conda activate test_geo`
+
 `jupyter lab`
 
 ### Flask Server
 `conda env create -f config/flask_env.yml`
+
 `conda activate flask_env`
+
 `flask run`
