@@ -7,6 +7,7 @@ import os
 import time
 import logging as log
 import covid_dashboard_utils.us_state_codes as stcd
+#import us_state_codes as stcd
 
 # print entire DataFrame or Series
 def print_full(x: any):
@@ -178,6 +179,22 @@ def calculate_full_rolling_averages_with_fips_index():
         county_counts_only_df = csse_county_df.loc[csse_county_df['fips'] == county_fips].iloc[0, 11:]
         
         print(county_fips +' pop: ' +str(county_pop))
+        
+        
+def save_fig_to_filesystem(fig: plt.figure, path: str, fname: str):
+    isExist = os.path.exists(path)
+
+    if not isExist:
+        os.makedirs(path)
+    
+    print('Saving to ' +fname)
+    
+    fig.savefig(path +fname)
+
+
+def date_to_sortable_filename(date_str):
+    date_parts = date_str.split('/')
+    return date_parts[2] +'-' +date_parts[0] +'-' +date_parts[1] +'.jpg'
     
         #county_norm_series = county_counts_only_df.diff().rolling(7).mean().apply(pop_normalize, args=(county_pop,))
         
